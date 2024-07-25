@@ -9,8 +9,7 @@ home_content = {
 }
 
 def create_cards(tracker_data):
-    sorted_data = sorted(tracker_data, key = lambda x: datetime.strptime(x['date'], '%Y-%m-%d'), reverse = True)
-    last_six_days = sorted_data[-6:]
+    last_six_days = sorted(tracker_data[-6:], key = lambda x: datetime.strptime(x['date'], '%Y-%m-%d'), reverse = True)
     calorie_tracker_cards = []
     for day in last_six_days:
         date = day['date']

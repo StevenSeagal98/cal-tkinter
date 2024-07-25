@@ -50,7 +50,7 @@ def main():
         windows['preferences']['update']()
         set_current_window('preferences')
 
-    def set_single_day(date_str = None):
+    def set_single_day(date_str = None, needs_formatting = False):
         from .views.main import get_windows
         windows = get_windows()
         if date_str is None:
@@ -60,9 +60,11 @@ def main():
         else:
             print('Setting single day to: ', date_str)
             try:
-                converted_date_obj = datetime.strptime(date_str, '%m/%d/%y')
-                formatted_date_str = converted_date_obj.strftime('%Y-%m-%d')
-                globals.selected_date = formatted_date_str
+                d = date_str
+                if needs_formatting:
+                    converted_date_obj = datetime.strptime(date_str, '%m/%d/%y') if needs_formatting else datetime.strptime(date_str, '%Y-%m-%d')
+                    d = converted_date_obj.strftime('%Y-%m-%d')
+                globals.selected_date = d
             except Exception as e:
                 print('Error setting single day: ', e)
                 return
@@ -135,18 +137,19 @@ def main():
                         scroll_text.insert(INSERT, line + '\n', 'header')
                     else:
                         scroll_text.insert(INSERT, line + '\n')
-                scroll_text.config(state=DISABLED)
+                scroll_text.config(state = DISABLED)
             elif widget['type'] == 'calorie_tracker_card':
                 card = customtkinter.CTkFrame(widget_frame)
                 card.pack(fill = 'x', padx = 10, pady = 10)
                 for child in widget['children']:
-                    customtkinter.CTkLabel(card, text=child['text']).pack(side='left', fill='x', padx=10, pady=10)
-                customtkinter.CTkButton(card, text='View', command=lambda: print('Searching for: ', widget['date'])).pack(side='right')
+                    customtkinter.CTkLabel(card, text=child['text']).pack(side = 'left', fill = 'x', padx = 10, pady = 10)
+                    
+                customtkinter.CTkButton(card, text = 'View', command = lambda d = widget['date']: set_single_day(d)).pack(side='right')
             elif widget['type'] == 'calendar':
                 now = datetime.now()
-                cal = Calendar(calendar_frame, selectmode='day', year=now.year, month=now.month, day=now.day)
+                cal = Calendar(calendar_frame, selectmode='day', year = now.year, month = now.month, day = now.day)
                 cal.pack(pady=10)
-                customtkinter.CTkButton(calendar_frame, text='Select', command=lambda: set_single_day(cal.get_date())).pack(pady=10)
+                customtkinter.CTkButton(calendar_frame, text='Select', command=lambda: set_single_day(cal.get_date(), True)).pack(pady=10)
 
     def set_current_window(window):
         current_window = window
