@@ -3,7 +3,7 @@ from datetime import datetime
 home_content = {
     'title': 'Home',
     'widgets': [
-        {'type': 'label', 'text': 'Home'},
+        {'type': 'label', 'text': 'Welcome to CalorieTracker'},
         {'type': 'calendar'}
     ]
 }
@@ -27,6 +27,8 @@ def create_cards(tracker_data):
 def init():
     import src.globals as globals
     calorie_tracker_data = globals.calorie_tracker_data
+    name = globals.preferences['name']
+    home_content['widgets'][0]['text'] = f"Welcome to CalorieTracker, {name}"
     if(len(calorie_tracker_data) > 0):
         calorie_tracker_cards = create_cards(calorie_tracker_data)
         home_content['widgets'] += calorie_tracker_cards
