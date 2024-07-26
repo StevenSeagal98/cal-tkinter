@@ -5,13 +5,10 @@ def get_current_day_calorie_data():
     data = None
     try:
         current_date = datetime.now().strftime('%Y-%m-%d')
-        #print('Length in current_day: ', len(globals.calorie_tracker_data))
         for item in globals.calorie_tracker_data:
-            #print('Item date: ', item['date'])
             if item['date'] == current_date:
                 data = item
                 break
-        #data = next((item for item in globals.calorie_tracker_data if item['date'] == current_date), None)
     except Exception as e:
         print('Error initializing current day content: ', e)
     return data
@@ -21,7 +18,6 @@ def init_current_day_content(content_obj):
         content_obj['widgets'] = content_obj['widgets'][:1]
     try:
         data = get_current_day_calorie_data()
-        #print('Data in init current day fn: ', data)
         if data:
             content_obj['widgets'].append({
                 'type': 'label',

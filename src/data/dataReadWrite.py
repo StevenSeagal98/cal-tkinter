@@ -25,7 +25,7 @@ def ensure_directory_exists(path):
 
 def init_storage():
     base_file_path = get_base_file_path()
-    ensure_directory_exists(base_file_path)  # Ensure the base directory exists
+    ensure_directory_exists(base_file_path)
     
     globals.preferences_file_path = os.path.join(base_file_path, file_paths['preferences'])
     globals.calorie_tracker_data_file_path = os.path.join(base_file_path, file_paths['calorie_tracker_data'])
@@ -35,11 +35,11 @@ def init_storage():
     
     globals.preferences = read_preferences_file()
     globals.calorie_tracker_data = read_calorie_tracker_data_file()
+    fill_missing_days()
     set_current_date()
 
 def init_preferences_file():
     if not check_file_exists(globals.preferences_file_path):
-        # Set structure of preferences file
         base_preferences = {
             'name': 'Jane Doe',
             'daily_calorie_goal': 2000
@@ -63,7 +63,6 @@ def init_calorie_tracker_data_file():
         with open(globals.calorie_tracker_data_file_path, 'w') as calorie_tracker_data_file:
             json.dump(base_calorie_tracker_data, calorie_tracker_data_file, indent=json_indent)
     else:
-        # add empty obj for current day's data
         with open(globals.calorie_tracker_data_file_path, 'r') as calorie_tracker_data_file:
             calorie_tracker_data = json.load(calorie_tracker_data_file)
             if calorie_tracker_data[-1]['date'] != datetime.datetime.now().strftime('%Y-%m-%d'):
@@ -81,7 +80,7 @@ def read_calorie_tracker_data_file():
     
 def write_to_preferences(data):
     with open(globals.preferences_file_path, 'w') as preferences_file:
-        json.dump(data, preferences_file, indent = json_indent)
+        json.dump(data, preferences_file, indent=json_indent)
 
 def write_to_calorie_tracker_data(data):
     updated = False
@@ -101,7 +100,7 @@ def write_to_calorie_tracker_data(data):
         return False
 
     with open(globals.calorie_tracker_data_file_path, 'w') as calorie_tracker_data_file:
-        json.dump(existing_data, calorie_tracker_data_file, indent = json_indent)
+        json.dump(existing_data, calorie_tracker_data_file, indent=json_indent)
 
     globals.calorie_tracker_data = existing_data
     
@@ -109,5 +108,36 @@ def write_to_calorie_tracker_data(data):
 
 def set_current_date():
     globals.selected_date = datetime.datetime.now().strftime('%Y-%m-%d')
+
+def fill_missing_days():
+    calorie_tracker_data = globals.calorie_tracker_data
+    if not calorie_tracker_data:
+        return
+    
+    start_date = datetime.datetime.strptime(calorie_tracker_data[0]['date'], '%Y-%m-%d')
+    end_date = datetime.datetime.now()
+    date_range = (end_date - start_date).days
+
+    existing_dates = {day['date'] for day in calorie_tracker_data}
+    for i in range(date_range + 1):
+        date = (start_date + datetime.timedelta(days=i)).strftime('%Y-%m-%d')
+        if date not in existing_dates:
+            daily_calories_struct = {
+                'date': date,
+                'calories_total': 0,
+                'meals': {
+                    'breakfast': {'calories': 0},
+                    'lunch': {'calories': 0},
+                    'dinner': {'calories': 0},
+                    'snacks': {'calories': 0}
+                }
+            }
+            calorie_tracker_data.append(daily_calories_struct)
+    
+    calorie_tracker_data.sort(key=lambda x: x['date'])
+    globals.calorie_tracker_data = calorie_tracker_data
+    
+    with open(globals.calorie_tracker_data_file_path, 'w') as calorie_tracker_data_file:
+        json.dump(calorie_tracker_data, calorie_tracker_data_file, indent=json_indent)
 
 init_storage()
