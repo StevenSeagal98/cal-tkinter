@@ -1,16 +1,51 @@
 
 body_text = """
-Header 1
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in venenatis enim, sed fermentum orci. Donec suscipit tincidunt ante, a convallis libero auctor ac.
+How to edit and save calories
 
-Header 2
-Vivamus a scelerisque nisi. Suspendisse potenti. Nullam facilisis dui eu purus vehicula, non elementum nisi finibus. Morbi convallis sem a elit vestibulum, id facilisis turpis viverra.
+1. Select your date from the "Home" window with either the calendar widget or clicking "View" on the calorie tracker cards
 
-Header 3
-Praesent sagittis nulla sed mi condimentum, in viverra lectus dictum. Aliquam erat volutpat. Curabitur quis metus ac nunc venenatis egestas. Vivamus in justo vel arcu convallis fermentum.
+2. Edit the calories for each meal
 
-Header 4
-Suspendisse potenti. Etiam sit amet lacinia lorem, et vulputate lorem. Proin euismod nunc eu est ultrices, in dapibus turpis viverra. In hac habitasse platea dictumst.
+3. Click "Save Calories" to save your changes
+
+4. You will be redirected to the "Home" window if your changes were successful
+
+
+How to view your daily calories
+
+Option 1. Click "Today's Calories" in the navigation bar
+
+Option 2. Select your date from the "Home" window with either the calendar widget or clicking "View" on the calorie tracker cards
+
+
+How to view and edit your preferences
+
+1. Click "Preferences" in the navigation bar
+
+2. Edit your preferences
+
+    a. Name: Accepts alpha characters only (a-z, A-Z)
+
+    b. Daily Calorie Goal: Accepts numeric characters only (0-9)
+
+3. Click "Save Preferences" to save your changes
+
+4. You will be redirected to the "Home" window if your changes were successful
+
+
+Where to find the source code
+
+The source code is publicly available on Github at https://github.com/StevenSeagal98/cal-tkinter
+
+
+Is my data safe?
+
+Your data is only stored on your local machine utilizing the JSON file format. No data is stored on any external servers or databases and is totally private for each user.
+
+
+What operating systems does this app run on?
+
+CalorieTracker is built with Python and Tkinter, which means it can run on any operating system that supports Python and Tkinter. This includes Windows, MacOS, and Linux. The executable file is only available for Windows at this time, but you can run the app on any operating system by running the Python script.
 """
 
 info_content = {
