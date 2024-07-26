@@ -1,12 +1,13 @@
+#same approach as single_day.py, but with different data
 class PreferencesData:
     def __init__(self):
         self.content = {}
         self.data = None
-
+    #get preferences data from globals
     def get_preferences_data(self):
         import src.globals as globals
         return globals.preferences
-
+    #set content for preferences view, used for init and updates
     def set_content(self):
         import src.globals as globals
         preferences_data = self.get_preferences_data()
@@ -21,12 +22,14 @@ class PreferencesData:
             'update': self.update
         }
 
+    # refreshes content of instantiated obj for view updates
     def update(self):
         self.data = self.get_preferences_data()
         self.set_content()
         print('Updating preferences data')
         print('Updated content: ', self.content)
 
+    # save preferences data to JSON file, used throughout the app
     def save_preferences(self, d):
         import src.globals as globals
         from src.data.dataReadWrite import write_to_preferences
@@ -47,7 +50,7 @@ class PreferencesData:
             'color': 'red',
             'success': False
         }
-
+        # data validation for preferences before saving
         if not isinstance(data['name'], str) or not data['name']:
             passed_check = False
 
@@ -55,6 +58,7 @@ class PreferencesData:
             passed_check = False
 
         if passed_check:
+            #save to json file
             preferences_data = self.get_preferences_data()
             preferences_data['name'] = data['name']
             preferences_data['daily_calorie_goal'] = int(data['daily_calorie_goal'])
@@ -64,9 +68,11 @@ class PreferencesData:
         else:
             return failed_check_dict
 
+#instantiate variables for preferences data, used to pull data for front end view
 preferences_data = PreferencesData()
 preferences_data.update()
 
+#update preferences data
 def update_preferences_data():
     import src.globals as globals
     try:

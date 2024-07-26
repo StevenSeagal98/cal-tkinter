@@ -1,5 +1,7 @@
 from datetime import datetime
 
+# Holds global properties to be used throughout the application, important for base functionality
+# single instance of this class is created in app.py and used throughout the app
 class Globals:
     def __init__(self):
         self._preferences_file_path = ''
@@ -8,6 +10,7 @@ class Globals:
         self._preferences = {}
         self._calorie_tracker_data = []
 
+    # getters and setters for all properties
     @property
     def preferences_file_path(self):
         return self._preferences_file_path
@@ -42,7 +45,8 @@ class Globals:
 
     @property
     def calorie_tracker_data(self):
-        return sorted(self._calorie_tracker_data, key=lambda x: datetime.strptime(x['date'], '%Y-%m-%d'), reverse=True)
+        #sort data by date in descending order, for home view
+        return sorted(self._calorie_tracker_data, key = lambda x: datetime.strptime(x['date'], '%Y-%m-%d'), reverse = True)
 
     @calorie_tracker_data.setter
     def calorie_tracker_data(self, value):
