@@ -34,8 +34,6 @@ class PreferencesData:
             'name': d['name'],
             'daily_calorie_goal': d['daily calorie goal']
         }
-        print('Saving: ', data)
-
         passed_check = True
         passed_check_dict = {
             'title': 'Success',
@@ -57,7 +55,6 @@ class PreferencesData:
             passed_check = False
 
         if passed_check:
-            print('Preferences data passed validation')
             preferences_data = self.get_preferences_data()
             preferences_data['name'] = data['name']
             preferences_data['daily_calorie_goal'] = int(data['daily_calorie_goal'])
@@ -65,7 +62,6 @@ class PreferencesData:
             globals.preferences = preferences_data
             return passed_check_dict
         else:
-            print('Preferences data did not pass validation')
             return failed_check_dict
 
 preferences_data = PreferencesData()

@@ -7,9 +7,7 @@ class SingleDayData:
         try:
             selected_date = data.selected_date
             for day in data.calorie_tracker_data:
-                print('Comparing: ', day['date'], selected_date)
                 if day['date'] == selected_date:
-                    print('Found day: ', day)
                     return day
         except Exception as e:
             print('Error getting single day data: ', e)
@@ -38,7 +36,6 @@ class SingleDayData:
         self.data = self.get_single_day_data(globals)
         self.set_content()
 
-
     def save_calories(self, data):
         import src.globals as globals
         from src.data.dataReadWrite import write_to_calorie_tracker_data
@@ -57,25 +54,19 @@ class SingleDayData:
             'success': False
         }
         for key, value in data.items():
-            print(f'Key: {key}, Value: {value}')
             if not value.isdigit():
                 passed_check = False
         
         if passed_check:
-            print('Data passed validation')
-            # Format and save to file
-            print('Data saved successfully: ', data)
             total_cals = 0
             day_calorie_data = self.get_single_day_data(globals)
             for key, value in data.items():
                 total_cals += int(value)
                 day_calorie_data['meals'][key]['calories'] = value
             day_calorie_data['calories_total'] = total_cals
-            print('Day Calorie Data: ', day_calorie_data)
             write_to_calorie_tracker_data(day_calorie_data)
             return passed_check_dict
         else:
-            print('Data did not pass validation')
             return failed_check_dict
 
 single_day_data = SingleDayData()
@@ -83,11 +74,4 @@ single_day_data.update()
 
 def update_single_day_data():
     import src.globals as globals
-    try:
-        selected_date = globals.selected_date
-        print('Updating single day data for: ')
-        print('Globals.selected_date in single_day: ', selected_date)
-    except Exception as e:
-        print('Error getting single day data: ', e)
-        return None
     return globals.selected_date

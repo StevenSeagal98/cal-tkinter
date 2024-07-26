@@ -78,6 +78,7 @@ def main():
         clear_window()
         if windows[window].get('update') is not None:
             windows[window]['update']()
+        print('Window: ', windows[window])
 
         card_frame = customtkinter.CTkFrame(main_content)
         card_frame.pack(side='left', fill='both', expand=True, padx=10, pady=10)
@@ -149,7 +150,7 @@ def main():
                 now = datetime.now()
                 cal = Calendar(calendar_frame, selectmode='day', year = now.year, month = now.month, day = now.day)
                 cal.pack(pady=10)
-                customtkinter.CTkButton(calendar_frame, text='Select', command=lambda: set_single_day(cal.get_date(), True)).pack(pady=10)
+                customtkinter.CTkButton(calendar_frame, text='Select', command = lambda: set_single_day(cal.get_date(), True)).pack(pady=10)
 
     def set_current_window(window):
         current_window = window
