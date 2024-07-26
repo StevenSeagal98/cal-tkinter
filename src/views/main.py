@@ -1,3 +1,6 @@
+#create all dicts for windows, call function in app.py to get all windows
+#refreshed with each window change to ensure data consistency
+
 def get_windows():
     from .home import home_data
     from .info import info_content

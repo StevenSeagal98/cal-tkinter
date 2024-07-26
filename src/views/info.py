@@ -1,4 +1,6 @@
 
+#simple text box component for "info" view
+
 body_text = """
 How to edit and save calories
 
@@ -48,6 +50,7 @@ What operating systems does this app run on?
 CalorieTracker is built with Python and Tkinter, which means it can run on any operating system that supports Python and Tkinter. This includes Windows, MacOS, and Linux. The executable file is only available for Windows at this time, but you can run the app on any operating system by running the Python script.
 """
 
+#init content/widgets for info view
 info_content = {
     'title': 'Info',
     'widgets': [

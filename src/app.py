@@ -1,4 +1,3 @@
-from math import fabs
 from tkinter import *
 from tkinter import scrolledtext
 from tkcalendar import Calendar
@@ -7,18 +6,21 @@ from datetime import datetime
 import customtkinter
 import src.globals as globals
 
+# Main function to run the app
 def main():
     customtkinter.set_appearance_mode('System')
     customtkinter.set_default_color_theme('blue')
-
+    # set initial window to main
     current_window = 'main'
-
+    # create the root for the app, all widgets append to this ultimately
     root = Tk()
     root.geometry('800x600')
 
+    # create a container to hold the navbar and main content
     container = customtkinter.CTkFrame(root)
     container.pack(fill = 'both', expand = True)
 
+    # create side navbar
     navbar = customtkinter.CTkFrame(container, width = 250)
     navbar.pack(side = 'left', fill = 'y')
 
@@ -87,20 +89,26 @@ def main():
         calendar_frame.pack(side='right', fill='y', expand=False, padx=10, pady=10)
 
         widget_frame = customtkinter.CTkFrame(card_frame)
-        widget_frame.pack(fill='both', expand=True)
+        widget_frame.pack(fill='both', expand = True)
+
+        # Render the widgets for the window
+        # fun little view structure, allows for dynamic view creation. Widgets specified in the ./views files are brought to life here.
+        # loop through widgets for view, mount them to the frame and apply any necessary logic
 
         for widget in windows[window]['widgets']:
             if widget['type'] == 'label':
-                customtkinter.CTkLabel(widget_frame, text=widget['text']).pack(pady=5)
+                customtkinter.CTkLabel(widget_frame, text = widget['text']).pack(pady = 5)
             elif widget['type'] == 'button':
+                # Handle the submit button in different views
                 def handle_submit_success(cm):
                     from .data.dataReadWrite import init_storage
                     cm_data = cm()
-                    print('CM Data: ', cm_data)
                     if(cm_data == None):
                         print('Setting success to true')
                         cm_data = { 'success' : True }
+                    
                     print('Data submitted successfully: ', cm_data)
+                    # if the button click came from a "form" view, check for a success key
                     if len(cm_data.keys()) > 1:
                         print('Got it')
                         if not cm_data['title']:
@@ -108,9 +116,11 @@ def main():
                         init_storage()
                         set_current_window('main')
                         #show_toast(cm_data['title'], cm_data['message'], cm_data['color'])
+                # Create the button and bind the command to the handle_submit_success function
                 customtkinter.CTkButton(widget_frame, text = widget['text'], command = lambda cm = widget['command']: handle_submit_success(cm)).pack(pady = 5)
             elif widget['type'] == 'entry':
-                customtkinter.CTkLabel(widget_frame, text = widget['text']).pack(pady=5)
+                # Create an entry widget and bind the KeyRelease event to update the editing data
+                customtkinter.CTkLabel(widget_frame, text = widget['text']).pack(pady = 5)
                 entry = customtkinter.CTkEntry(widget_frame)
                 starting = StringVar(root, value = widget['starting'])
                 entry.insert(END, starting.get())
@@ -123,40 +133,47 @@ def main():
                     globals.editing_data[key] = starting.get()
 
                 def update_editing_data(event, key=key, entry=entry):
+                    # Update the editing data with the current value of the entry
                     current_value = entry.get()
                     globals.editing_data[key] = current_value
                 
                 # Bind the KeyRelease event to the update function
                 entry.bind('<KeyRelease>', lambda event, key = key, entry = entry: update_editing_data(event, key, entry))
+            
+            #for scrolled text widget on info view
             elif widget['type'] == 'scrolledtext':
                 scroll_text = scrolledtext.ScrolledText(widget_frame, wrap = WORD, width = 50, height = 15)
-                scroll_text.pack(padx=10, pady=10)
+                scroll_text.pack(padx = 10, pady = 10)
                 scroll_text.tag_config('header')
                 lines = widget['text'].strip().split('\n')
                 for line in lines:
-                    if line.startswith('Header'):
-                        scroll_text.insert(INSERT, line + '\n', 'header')
-                    else:
-                        scroll_text.insert(INSERT, line + '\n')
+                    #insert each line of text after a new line, check views/info.py for the text
+                    scroll_text.insert(INSERT, line + '\n')
+                # disable the widget so it can't be edited
                 scroll_text.config(state = DISABLED)
             elif widget['type'] == 'calorie_tracker_card':
+                # Create a card for the calorie tracker data, one of these are applied for each day in the last six days if available
                 card = customtkinter.CTkFrame(widget_frame)
                 card.pack(fill = 'x', padx = 10, pady = 10)
+                # Loop through the children of the card and create a label for each
                 for child in widget['children']:
                     customtkinter.CTkLabel(card, text=child['text']).pack(side = 'left', fill = 'x', padx = 10, pady = 10)
-                    
+                # Create a button to view the day in more detail
                 customtkinter.CTkButton(card, text = 'View', command = lambda d = widget['date']: set_single_day(d)).pack(side='right')
             elif widget['type'] == 'calendar':
+                # Create a calendar widget to select a day
                 now = datetime.now()
-                cal = Calendar(calendar_frame, selectmode='day', year = now.year, month = now.month, day = now.day)
-                cal.pack(pady=10)
+                cal = Calendar(calendar_frame, selectmode = 'day', year = now.year, month = now.month, day = now.day)
+                cal.pack(pady = 10)
+                # Create a button to select the day, fire set_single_day function on click
                 customtkinter.CTkButton(calendar_frame, text='Select', command = lambda: set_single_day(cal.get_date(), True)).pack(pady=10)
-
+    # Set the current window to the specified window
     def set_current_window(window):
         current_window = window
         render_widgets(current_window)
 
     def create_navbar_buttons():
+        # Create the buttons for the navbar dynamically
         nav_buttons = [
             {'text': 'Home', 'command': lambda: set_current_window('main')},
             {'text': 'Today\'s Calories', 'command': lambda: set_single_day()},
@@ -168,6 +185,8 @@ def main():
             customtkinter.CTkButton(navbar, text = btn['text'], command = btn['command']).pack(fill = 'x', padx = 10, pady = 10)
         
     create_navbar_buttons()
-    set_current_window(current_window)
 
+    # Set the initial window to main
+    set_current_window(current_window)
+    # Run the main loop
     root.mainloop()
