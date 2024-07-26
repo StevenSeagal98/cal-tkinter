@@ -5,6 +5,8 @@ from .data.dataReadWrite import *
 from datetime import datetime
 import customtkinter
 import src.globals as globals
+import os
+from PIL import Image
 
 # Main function to run the app
 def main():
@@ -15,6 +17,9 @@ def main():
     # create the root for the app, all widgets append to this ultimately
     root = Tk()
     root.geometry('800x600')
+    icon_dir = os.path.dirname(__file__)  # Get the directory of the current script
+    icon_path = os.path.join(icon_dir, 'assets', 'ct-icon.ico')
+    root.iconbitmap(icon_path)
 
     # create a container to hold the navbar and main content
     container = customtkinter.CTkFrame(root)
@@ -26,6 +31,14 @@ def main():
 
     main_content = customtkinter.CTkFrame(container)
     main_content.pack(side = 'right', fill = 'both', expand = True)
+
+    # # Load the logo image
+    script_dir = os.path.dirname(__file__)  # Get the directory of the current script
+    logo_path = os.path.join(script_dir, 'assets', 'cal_tracker_logo.png')
+
+    nav_logo = customtkinter.CTkImage(dark_image = Image.open(logo_path), light_image = Image.open(logo_path), size = (150, 150))
+    nav_logo_label = customtkinter.CTkLabel(navbar, text = '', image = nav_logo)
+    nav_logo_label.pack(pady = 10, padx = 10)
 
     def show_toast(title, message, color):
         toast = Toplevel()
